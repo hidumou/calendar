@@ -79,6 +79,9 @@ $calendar-width:900;
       padding: 20px 10px;
       position: relative;
       width: $calendar-width/7 * 1px;
+      box-shadow: 0 0 4px rgba(6, 6, 6, 0.25);
+      border-radius: 5px;
+      overflow: hidden;
 
       //普通日期
       &.day{

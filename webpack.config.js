@@ -7,11 +7,11 @@ var port = 8098;
 
 module.exports = {
     entry: {
-        "index": './src/app.js'
+        "app": './src/app.js'
     },
     output: {
         path: './build',
-        filename: "build.js"
+        filename: "[name].[hash].js"
     },
     module: {
         preLoaders: [
