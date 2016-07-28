@@ -2,221 +2,6 @@
 
 require('./style.scss');
 
-//Array.map IE Polyfill
-if (!Array.prototype.map) {
-    Array.prototype.map = function (callback, thisArg) {
-        var T, A, k;
-        var O = Object(this);
-        var len = O.length;
-        if (arguments.length > 1) {
-            T = thisArg;
-        }
-        A = new Array(len);
-        k = 0;
-        while (k < len) {
-            var kValue, mappedValue;
-            if (k in O) {
-                kValue = O[k];
-                mappedValue = callback.call(T, kValue, k, O);
-                A[k] = mappedValue;
-            }
-            k++;
-        }
-        return A;
-    };
-}
-
-//Date.format
-Date.prototype.format = function (c) {
-    c = c || "";
-    if (isNaN(this)) {
-        return "";
-    }
-    var b = {
-        "m+": this.getMonth() + 1,
-        "d+": this.getDate(),
-        "h+": this.getHours(),
-        "n+": this.getMinutes(),
-        "s+": this.getSeconds(),
-        S: this.getMilliseconds(),
-        W: ["日", "一", "二", "三", "四", "五", "六"][this.getDay()], "q+": Math.floor((this.getMonth() + 3) / 3)
-    };
-    if (c.indexOf("am/pm") >= 0) {
-        c = c.replace("am/pm", (b["h+"] >= 12) ? "下午" : "上午");
-        if (b["h+"] >= 12) {
-            b["h+"] -= 12;
-        }
-    }
-    if (/(y+)/.test(c)) {
-        c = c.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    }
-    for (var a in b) {
-        if (new RegExp("(" + a + ")").test(c)) {
-            c = c.replace(RegExp.$1, RegExp.$1.length == 1 ? b[a] : ("00" + b[a]).substr(("" + b[a]).length));
-        }
-    }
-    return c;
-};
-
-
-/**
- * 简单工具类
- */
-var Tools = {
-    hasProperty: Object.prototype.hasOwnProperty,
-
-    /**
-     * Copy
-     */
-    extend: Object.assign || function (target) {
-        for (var i = 1; i < arguments.length; i++) {
-            var source = arguments[i];
-            for (var key in source) {
-                if (this.hasProperty.call(target, key)) {
-                    target[key] = source[key];
-                }
-            }
-        }
-        return target;
-    },
-    /**
-     * 添加事件
-     * @param obj
-     * @param type
-     * @param fn
-     * @param isCap
-     */
-    addEve: function (obj, type, fn, isCap) {
-        if (obj.addEventListener) {//W3C
-            obj.addEventListener(type, fn, isCap || false);
-        } else if (obj.attachEvent) {//IE
-            obj.attachEvent('on' + type, fn);
-        }
-    },
-    /**
-     * 移除事件
-     * @param obj
-     * @param type
-     * @param fn
-     */
-    removeEve: function (obj, type, fn) {
-        if (obj.removeEventListener) {
-            obj.removeEventListener(type, fn, false);
-        } else if (obj.detachEvent) {
-            obj.detachEvent("on" + type, fn);
-        }
-    },
-    /**
-     * 创建数组
-     * @param length
-     * @returns {Array}
-     */
-    createArr: function (length) {
-        var range = new Array(length);
-        for (var idx = 0; idx < length; idx++) {
-            range[idx] = idx;
-        }
-        return range;
-    },
-    /**
-     * 判断某个对象是否有指定的className
-     * @param ele
-     * @param cls
-     */
-    hasClass: function (ele, cls) {
-        return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
-    },
-
-    /**
-     * 给指定对象添加className
-     * @param ele
-     * @param cls
-     */
-    addClass: function (ele, cls) {
-        if (!hasClass(ele, cls)) ele.className += " " + cls;
-    },
-
-    /**
-     * 删除className
-     * @param ele
-     * @param cls
-     */
-    removeClass: function (ele, cls) {
-        if (hasClass(ele, cls)) {
-            var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
-            ele.className = ele.className.replace(reg, ' ');
-        }
-    },
-    /**
-     * 增减天数 返回日期
-     * @param date
-     * @param dayNums
-     * @returns {*|{}|{year, month, date}}
-     */
-    addDayNum: function (date, dayNums) {
-        return new Date(date.getTime() + (1000 * 60 * 60 * 24 * dayNums));
-    },
-
-    /**
-     * 格式化时间
-     * @param time
-     * @param type
-     * @returns {*}
-     */
-    formatDate: function (time, type) {
-        var pattern = "yyyy-mm-dd hh:nn";
-        switch (type) {
-            case 1:
-                pattern = "yyyy年mm月dd日";
-                break;
-            case 2:
-                pattern = "hh:nn";
-                break;
-            case 3:
-                pattern = "yyyy.mm.d";
-                break;
-            case 4:
-                pattern = "yyyy-mm-dd hh:nn:ss";
-                break;
-            case 5:
-                pattern = "yyyy年mm月";
-                break;
-            case 6:
-                pattern = "yyyy-mm-dd";
-                break;
-            case 7:
-                pattern = "yyyy年mm月dd日 hh:nn";
-                break;
-            case 8:
-                pattern = "mm月dd日";
-                break;
-            case 9:
-                pattern = "mm月dd日 hh:nn";
-                break;
-            case 10:
-                pattern = "mm-dd";
-                break;
-            case 0:
-                pattern = "yyyy/mm/dd";
-                break;
-            default:
-                pattern = !!type ? type : pattern;
-                break;
-        }
-        if (isNaN(time) || time === null) {
-            return '';
-        }
-
-        if (typeof (time) == 'object') {
-            var y = dd.getFullYear(), m = dd.getMonth(), d = dd.getDate();
-            if (m < 10) m = '0' + m;
-            return new Date(Date.UTC(y, m, d)).format(pattern);
-        } else {
-            return new Date(parseInt(time)).format(pattern);
-        }
-    }
-};
-
 
 /**
  * 模块处理
@@ -253,12 +38,8 @@ var Tools = {
             container: document.body
         };
 
-        /**
-         * 初始化
-         */
         this.init(opt);
     }
-
 
     var proty = Calendar.prototype;
 
@@ -744,3 +525,224 @@ var Tools = {
 
     return Calendar;
 });
+
+
+
+
+
+
+
+//Array.map IE Polyfill
+if (!Array.prototype.map) {
+    Array.prototype.map = function (callback, thisArg) {
+        var T, A, k;
+        var O = Object(this);
+        var len = O.length;
+        if (arguments.length > 1) {
+            T = thisArg;
+        }
+        A = new Array(len);
+        k = 0;
+        while (k < len) {
+            var kValue, mappedValue;
+            if (k in O) {
+                kValue = O[k];
+                mappedValue = callback.call(T, kValue, k, O);
+                A[k] = mappedValue;
+            }
+            k++;
+        }
+        return A;
+    };
+}
+
+//Date.format
+Date.prototype.format = function (c) {
+    c = c || "";
+    if (isNaN(this)) {
+        return "";
+    }
+    var b = {
+        "m+": this.getMonth() + 1,
+        "d+": this.getDate(),
+        "h+": this.getHours(),
+        "n+": this.getMinutes(),
+        "s+": this.getSeconds(),
+        S: this.getMilliseconds(),
+        W: ["日", "一", "二", "三", "四", "五", "六"][this.getDay()], "q+": Math.floor((this.getMonth() + 3) / 3)
+    };
+    if (c.indexOf("am/pm") >= 0) {
+        c = c.replace("am/pm", (b["h+"] >= 12) ? "下午" : "上午");
+        if (b["h+"] >= 12) {
+            b["h+"] -= 12;
+        }
+    }
+    if (/(y+)/.test(c)) {
+        c = c.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    for (var a in b) {
+        if (new RegExp("(" + a + ")").test(c)) {
+            c = c.replace(RegExp.$1, RegExp.$1.length == 1 ? b[a] : ("00" + b[a]).substr(("" + b[a]).length));
+        }
+    }
+    return c;
+};
+
+
+/**
+ * 简单工具类
+ */
+var Tools = {
+    hasProperty: Object.prototype.hasOwnProperty,
+
+    /**
+     * Copy
+     */
+    extend: Object.assign || function (target) {
+        for (var i = 1; i < arguments.length; i++) {
+            var source = arguments[i];
+            for (var key in source) {
+                if (this.hasProperty.call(target, key)) {
+                    target[key] = source[key];
+                }
+            }
+        }
+        return target;
+    },
+    /**
+     * 添加事件
+     * @param obj
+     * @param type
+     * @param fn
+     * @param isCap
+     */
+    addEve: function (obj, type, fn, isCap) {
+        if (obj.addEventListener) {//W3C
+            obj.addEventListener(type, fn, isCap || false);
+        } else if (obj.attachEvent) {//IE
+            obj.attachEvent('on' + type, fn);
+        }
+    },
+    /**
+     * 移除事件
+     * @param obj
+     * @param type
+     * @param fn
+     */
+    removeEve: function (obj, type, fn) {
+        if (obj.removeEventListener) {
+            obj.removeEventListener(type, fn, false);
+        } else if (obj.detachEvent) {
+            obj.detachEvent("on" + type, fn);
+        }
+    },
+    /**
+     * 创建数组
+     * @param length
+     * @returns {Array}
+     */
+    createArr: function (length) {
+        var range = new Array(length);
+        for (var idx = 0; idx < length; idx++) {
+            range[idx] = idx;
+        }
+        return range;
+    },
+    /**
+     * 判断某个对象是否有指定的className
+     * @param ele
+     * @param cls
+     */
+    hasClass: function (ele, cls) {
+        return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+    },
+
+    /**
+     * 给指定对象添加className
+     * @param ele
+     * @param cls
+     */
+    addClass: function (ele, cls) {
+        if (!hasClass(ele, cls)) ele.className += " " + cls;
+    },
+
+    /**
+     * 删除className
+     * @param ele
+     * @param cls
+     */
+    removeClass: function (ele, cls) {
+        if (hasClass(ele, cls)) {
+            var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+            ele.className = ele.className.replace(reg, ' ');
+        }
+    },
+    /**
+     * 增减天数 返回日期
+     * @param date
+     * @param dayNums
+     * @returns {*|{}|{year, month, date}}
+     */
+    addDayNum: function (date, dayNums) {
+        return new Date(date.getTime() + (1000 * 60 * 60 * 24 * dayNums));
+    },
+
+    /**
+     * 格式化时间
+     * @param time
+     * @param type
+     * @returns {*}
+     */
+    formatDate: function (time, type) {
+        var pattern = "yyyy-mm-dd hh:nn";
+        switch (type) {
+            case 1:
+                pattern = "yyyy年mm月dd日";
+                break;
+            case 2:
+                pattern = "hh:nn";
+                break;
+            case 3:
+                pattern = "yyyy.mm.d";
+                break;
+            case 4:
+                pattern = "yyyy-mm-dd hh:nn:ss";
+                break;
+            case 5:
+                pattern = "yyyy年mm月";
+                break;
+            case 6:
+                pattern = "yyyy-mm-dd";
+                break;
+            case 7:
+                pattern = "yyyy年mm月dd日 hh:nn";
+                break;
+            case 8:
+                pattern = "mm月dd日";
+                break;
+            case 9:
+                pattern = "mm月dd日 hh:nn";
+                break;
+            case 10:
+                pattern = "mm-dd";
+                break;
+            case 0:
+                pattern = "yyyy/mm/dd";
+                break;
+            default:
+                pattern = !!type ? type : pattern;
+                break;
+        }
+        if (isNaN(time) || time === null) {
+            return '';
+        }
+
+        if (typeof (time) == 'object') {
+            var y = dd.getFullYear(), m = dd.getMonth(), d = dd.getDate();
+            if (m < 10) m = '0' + m;
+            return new Date(Date.UTC(y, m, d)).format(pattern);
+        } else {
+            return new Date(parseInt(time)).format(pattern);
+        }
+    }
+};
