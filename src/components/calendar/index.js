@@ -161,7 +161,7 @@ require('./style.scss');
             var oLi = this.dom.create('li');
             oLi.innerText = monthArr[i];
             this.dom.setAttr(oLi, 'value', i);
-            if (i == this.defaults.currentDate.getMonth()) {
+            if (i === this.defaults.currentDate.getMonth()) {
                 oLi.className = 'active';
             }
             month.appendChild(oLi);
@@ -211,11 +211,11 @@ require('./style.scss');
      */
     proty.inserData = function (d) {
         var currentDate = d || this.defaults.currentDate, _this = this;
-        var first_daye_of_current_month = this.getFirstDay(currentDate);
+        var first_day_of_current_month = this.getFirstDay(currentDate);
 
         var current_month = {
             //前一个月的偏差值
-            preMonthOffset: first_daye_of_current_month ? first_daye_of_current_month : 7 - first_daye_of_current_month,
+            preMonthOffset: first_day_of_current_month ? first_day_of_current_month : 7 - first_day_of_current_month,
             endDate: this.getDaysOfMonth(currentDate)
             //后一个月偏差值 : a.硬编码计算(至少大于当前月份所能否显示列数) b.Math.ceil((前一个月的偏差量 + 当前月的天数动态计算)/7)*7 - (前一个月的偏差量 + 当前月的天数动态计算);
         };

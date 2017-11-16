@@ -1,5 +1,5 @@
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -9,55 +9,55 @@ var port = 8098;
 module.exports = {
     entry: {
         "app": './src/app.js',
-        "calendar": './src/app.js'
     },
     output: {
-        path: './build',
-        filename: "[name].min.js"
+        path: path.resolve(__dirname, "./build"),
+        filename: "[name].js"
     },
+
     module: {
-        preLoaders: [
+        rules: [
             {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "jshint"
-            }
-        ],
-        loaders: [
-            {
-                test: /\.scss$/,
-                loader: ExtractTextPlugin.extract("style-loader", "css-loader!cssnext-loader!sass-loader!postcss-loader"),
-                exclude: /node_modules/
-            },
-            {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract("style-loader", "css-loader!cssnext-loader!postcss-loader")
+                test: /\.scss|css$/,
+                use:[
+                    "style-loader",
+                    "css-loader",
+                    "sass-loader?sourceMap"
+                ]
             }
         ]
     },
-    devtool: 'source-map',
-    postcss: [
-        require('precss'),
-        require('autoprefixer')({browsers: ['> 1%', 'IE 7'], syntax: require('postcss-scss')})
-    ],
+    devtool: '#eval-source-map',
     plugins: [
         new CleanWebpackPlugin('./build'),
         new HtmlWebpackPlugin({
-            template:'./src/tmpl.html',
-            inject: true,
-            chunks:['app']
+            template: './src/tmpl.html',
+            excludeChunks:['calendar']
         }),
-        new ExtractTextPlugin("style.css"),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        }),
-        new webpack.NoErrorsPlugin(),
-        new OpenBrowserPlugin({ url: 'http://localhost:' + port })
+        new OpenBrowserPlugin({url: 'http://localhost:' + port})
     ],
     devServer: {
         port: port
     }
 };
+
+
+if (process.env.NODE_ENV === "production") {
+    module.exports.devtool = "";
+    module.exports.plugins = (module.exports.plugins || []).concat([
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: "'production'"
+            }
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            // sourceMap: true,
+            compress: {
+                warnings: false
+            }
+        }),
+        new webpack.LoaderOptionsPlugin({
+            minimize: true
+        }),
+    ]);
+}

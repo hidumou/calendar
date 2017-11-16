@@ -1,2 +1,2 @@
-var Calendar = require('./components/Calendar/calendar');
+var Calendar = require('./components/calendar');
 new Calendar();
