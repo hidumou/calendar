@@ -280,7 +280,7 @@ require('./style.scss');
         //选择月
         Tools.addEve(month, 'click', function (e) {
             //事件绑定在 UL 上!~
-            if((e.target || e.srcElement).nodeName!=='LI'){return;}
+            if((e.target || e.srcElement).nodeName!=='LI'){return;}//IE 事件源兼容
 
             var allChild = month.childNodes;
             //remove Class
