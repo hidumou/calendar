@@ -1,0 +1,41 @@
+/* ----------------- vw 过小时 导致的问题 -------*/
+@media screen and (max-width: 1200px) {
+  /* fixed 大屏 实时数据文字过小 */
+  .index.title .left,
+  .contentList li,
+  .index .main > .lay-top > .center .gis .gis-title p span {
+    font-size: 12px !important;
+  }
+}
+
+/* ----------------- 样式布局问题 -------------- */
+
+/* 全省空气质量排名 滚动溢出问题 */
+.index.mian .public-small {
+  overflow: hidden !important;
+}
+
+/* 铜川换将tag 问题 */
+.index .main > .lay-top > .center .gis .gis-title p {
+  display: block !important;
+  overflow: hidden !important;
+  font-size: 0;
+}
+.index .main > .lay-top > .center .gis .gis-title p span {
+  display: inline-block !important;
+}
+
+/* 报表时间维度显示问题 今年 今日 ... */
+.index .public-title ul li {
+  flex: none !important;
+}
+
+/* 水检测站 列表溢出问题  todo: 布局调整 li 下应该是4个span */
+.dataDetails .list .content-list .left ul:last-child,
+.dataDetails .contentList {
+  display: block !important;
+}
+.dataDetails .list .content-list .left ul:last-child li,
+.dataDetails .contentList li {
+  width: 100% !important;
+}
