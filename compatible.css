@@ -40,3 +40,8 @@
 .dataDetails .contentList li {
   width: 100% !important;
 }
+
+/* AQI 日期问题 */
+.aqi-title .el-input__inner{
+  line-height: 15px;
+}
