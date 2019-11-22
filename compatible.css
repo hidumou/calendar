@@ -20,7 +20,7 @@
   display: block !important;
   overflow: hidden !important;
   font-size: 0;
-  width: auto;
+  width: auto !important;
 }
 .index .main > .lay-top > .center .gis .gis-title p span {
   display: inline-block !important;
