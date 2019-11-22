@@ -1,7 +1,7 @@
 /* ----------------- vw 过小时 导致的问题 -------*/
 @media screen and (max-width: 1400px) {
   /* fixed 大屏 实时数据文字过小 */
-  .index.title .left,
+  .index .title .left,
   .contentList li,
   .index .main > .lay-top > .center .gis .gis-title p span {
     font-size: 12px !important;
