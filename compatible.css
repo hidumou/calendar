@@ -45,3 +45,8 @@
 .aqi-title .el-input__inner{
   line-height: 15px;
 }
+
+/* 首页tab等分问题 */
+.index .content .con-Info .infoItem .topItem{
+  justify-content: flex-start !important;
+}
