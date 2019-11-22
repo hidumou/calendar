@@ -50,3 +50,8 @@
 .index .content .con-Info .infoItem .topItem{
   justify-content: flex-start !important;
 }
+
+/* 全省空气质量滚动溢出问题 */
+.app-main .main .lay-top .left .public-small .table-wrapper{
+  overflow: hidden !important;
+}
