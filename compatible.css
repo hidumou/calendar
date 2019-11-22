@@ -1,5 +1,5 @@
 /* ----------------- vw 过小时 导致的问题 -------*/
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1400px) {
   /* fixed 大屏 实时数据文字过小 */
   .index.title .left,
   .contentList li,
@@ -20,6 +20,7 @@
   display: block !important;
   overflow: hidden !important;
   font-size: 0;
+  width: auto;
 }
 .index .main > .lay-top > .center .gis .gis-title p span {
   display: inline-block !important;
