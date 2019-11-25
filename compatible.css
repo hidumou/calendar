@@ -50,3 +50,11 @@
 .app-main .main .lay-top .left .public-small .table-wrapper{
   overflow: hidden !important;
 }
+
+/* 重点污染源，空数据是 错乱问题 */
+.section.shadow.noneNum{
+  padding: 100px 0 !important;
+}
+.section.shadow.noneNum img{
+  max-height: none !important;
+}
